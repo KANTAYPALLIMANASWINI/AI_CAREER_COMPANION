@@ -1,4 +1,5 @@
 streamlit
 nltk
-pdfminer.six
+pdfminer.six==20221105
+
 
