@@ -1,17 +1,30 @@
 import io
-from pdfminer.high_level import extract_text
 import nltk
+import os
+from pdfminer.high_level import extract_text
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from modules import tips
 
-nltk.download('punkt')
-nltk.download('stopwords')
+# Download NLTK data safely only if not already downloaded
+nltk_data_path = os.path.join(os.path.expanduser("~"), "nltk_data")
+nltk.data.path.append(nltk_data_path)
 
-# Sample skill database
-skills_db = ['python', 'java', 'c', 'html', 'css', 'machine learning', 'data analysis', 'communication', 'teamwork', 'oops', 'sql', 'javascript']
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt", download_dir=nltk_data_path)
 
-# Predefined job roles and required skills
+try:
+    nltk.data.find("corpora/stopwords")
+except LookupError:
+    nltk.download("stopwords", download_dir=nltk_data_path)
+
+# Skill database
+skills_db = ['python', 'java', 'c', 'html', 'css', 'machine learning', 'data analysis',
+             'communication', 'teamwork', 'oops', 'sql', 'javascript']
+
+# Job roles and required skills
 job_roles = {
     'Frontend Developer': ['html', 'css', 'javascript', 'react'],
     'Backend Developer': ['python', 'django', 'flask', 'sql'],
@@ -22,6 +35,7 @@ job_roles = {
     'UI/UX Designer': ['figma', 'adobe', 'creativity'],
     'Communication Executive': ['communication', 'english', 'presentation']
 }
+
 
 def build_resume(uploaded_file):
     # Step 1: Extract resume text
@@ -43,8 +57,10 @@ def build_resume(uploaded_file):
             best_match = role
 
     # Step 4: Resume rating
-    expected_sections = ['objective', 'education', 'skills', 'experience', 'projects', 'certifications', 'contact']
-    expected_keywords = ['python', 'java', 'ml', 'data', 'project', 'communication', 'teamwork', 'leadership']
+    expected_sections = ['objective', 'education', 'skills', 'experience',
+                         'projects', 'certifications', 'contact']
+    expected_keywords = ['python', 'java', 'ml', 'data', 'project',
+                         'communication', 'teamwork', 'leadership']
     section_score = sum([1 for section in expected_sections if section in resume_text.lower()])
     keyword_score = sum([1 for word in expected_keywords if word in resume_text.lower()])
     total_score = section_score + keyword_score
