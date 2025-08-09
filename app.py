@@ -1,3 +1,7 @@
+import nltk
+nltk.download('punkt')
+
+import streamlit as st
 import streamlit as st
 from login import login
 from chatbot import get_bot_response
@@ -101,3 +105,4 @@ if login():
 
 else:
     st.warning("Please login from the sidebar to continue 🔐")
+
