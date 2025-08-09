@@ -1,17 +1,24 @@
-
+import os
 import nltk
 
+# Set up nltk_data directory inside your app folder
+nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+if not os.path.exists(nltk_data_dir):
+    os.mkdir(nltk_data_dir)
+
+# Download punkt tokenizer if not already present
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt')
-import nltk
-nltk.download('punkt')
+    nltk.download('punkt', download_dir=nltk_data_dir, quiet=True)
 
-import streamlit as st
+# Add this directory to nltk data search path
+nltk.data.path.append(nltk_data_dir)
+
 import streamlit as st
 from login import login
 from chatbot import get_bot_response
+
 from modules import resume_builder, missing_skills, tips
 import base64
 
@@ -45,13 +52,6 @@ def add_bg_from_local(image_file):
         """,
         unsafe_allow_html=True
     )
-
-# 🖼️ Set Background Image (Make sure 'background.jpg' is in the same folder)
-add_bg_from_local("background.jpg")
-
-# 🧾 Page setup
-st.set_page_config(page_title="AI Career Companion", page_icon="🤖")
-st.title("AI Career Companion 🤖💼")
 
 # 🔐 Login check
 if login():
@@ -112,4 +112,5 @@ if login():
 
 else:
     st.warning("Please login from the sidebar to continue 🔐")
+
 
